@@ -11,10 +11,10 @@
         <pd:x>65</pd:x>
         <pd:y>42</pd:y>
         <config>
-            <StartTime>1717403708000</StartTime>
+            <StartTime>1717432200000</StartTime>
             <Frequency>false</Frequency>
-            <TimeInterval>5</TimeInterval>
-            <FrequencyIndex>Minute</FrequencyIndex>
+            <TimeInterval>1</TimeInterval>
+            <FrequencyIndex>Day</FrequencyIndex>
         </config>
         <pd:inputBindings/>
     </pd:starter>
