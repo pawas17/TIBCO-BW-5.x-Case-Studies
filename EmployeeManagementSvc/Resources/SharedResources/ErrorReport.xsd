@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd2"
+	 targetNamespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd2"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:element name="ErrorReport">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ErrorType" minOccurs="0"/>
+				<xs:element ref="StackTrace" minOccurs="0"/>
+				<xs:element ref="Msg" minOccurs="0"/>
+				<xs:element ref="FullClass" minOccurs="0"/>
+				<xs:element ref="Class" minOccurs="0"/>
+				<xs:element ref="ProcessStack" minOccurs="0"/>
+				<xs:element ref="MsgCode" minOccurs="0"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ErrorType" type="xs:string"/>
+	<xs:element name="StackTrace" type="xs:string"/>
+	<xs:element name="Msg" type="xs:string"/>
+	<xs:element name="FullClass" type="xs:string"/>
+	<xs:element name="Class" type="xs:string"/>
+	<xs:element name="ProcessStack" type="xs:string"/>
+	<xs:element name="MsgCode" type="xs:string"/>
+</xs:schema>

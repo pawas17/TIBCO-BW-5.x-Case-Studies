@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd2" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd2" schemaLocation="/Resources/SharedResources/ErrorReport.xsd"/>
+    <pd:name>Commons/DumpErrorLogToDatabase.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx:ErrorReport"/>
+    <pd:startX>83</pd:startX>
+    <pd:startY>58</pd:startY>
+    <pd:returnBindings>
+        <Result>
+            <xsl:value-of select="&quot;Error has been logged successfully on the Error database&quot;"/>
+        </Result>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="Result" type="xsd:string"/>
+    </pd:endType>
+    <pd:endX>576</pd:endX>
+    <pd:endY>57</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1717230251896</pd:targetNamespace>
+    <pd:activity name="CatchAll">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>220</pd:x>
+        <pd:y>153</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="DumpErrorToDB">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>371</pd:x>
+        <pd:y>58</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>true</emptyStrAsNil>
+            <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionErrorDB.sharedjdbc</jdbcSharedConfig>
+            <statement>insert into dumperror(errorlogid,errortype,stacktrace,msg,fullclass,class,ProcessStack,msgcode) values(?,?,?,?,?,?,?,?)</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>error_log_id</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>errortype</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>stacktrace</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>msg</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>fullclass</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>class</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>ProcessStack</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>msgcode</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <jdbcUpdateActivityInput>
+                <error_log_id>
+                    <xsl:value-of select="$GenerateID/ID"/>
+                </error_log_id>
+                <errortype>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:ErrorReport/pfx:ErrorType)">
+                            <xsl:value-of select="$Start/pfx:ErrorReport/pfx:ErrorType"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </errortype>
+                <stacktrace>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:ErrorReport/pfx:StackTrace)">
+                            <xsl:value-of select="$Start/pfx:ErrorReport/pfx:StackTrace"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </stacktrace>
+                <msg>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:ErrorReport/pfx:Msg)">
+                            <xsl:value-of select="$Start/pfx:ErrorReport/pfx:Msg"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </msg>
+                <fullclass>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:ErrorReport/pfx:FullClass)">
+                            <xsl:value-of select="$Start/pfx:ErrorReport/pfx:FullClass"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </fullclass>
+                <class>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:ErrorReport/pfx:Class)">
+                            <xsl:value-of select="$Start/pfx:ErrorReport/pfx:Class"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </class>
+                <ProcessStack>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:ErrorReport/pfx:ProcessStack)">
+                            <xsl:value-of select="$Start/pfx:ErrorReport/pfx:ProcessStack"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </ProcessStack>
+                <msgcode>
+                    <xsl:choose>
+                        <xsl:when test="exists($Start/pfx:ErrorReport/pfx:MsgCode)">
+                            <xsl:value-of select="$Start/pfx:ErrorReport/pfx:MsgCode"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </msgcode>
+            </jdbcUpdateActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="GenerateID">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>220</pd:x>
+        <pd:y>58</pd:y>
+        <config>
+            <processName>/Commons/GenerateID.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="WriteErrorToFile">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>350</pd:x>
+        <pd:y>153</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+            <append>true</append>
+        </config>
+        <pd:inputBindings>
+            <ns2:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/LogEmployeeSvc"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="concat(&quot;&#xD;&quot;,$_error/ns1:ErrorReport/Data/*,&quot; at: &quot;,current-dateTime())"/>
+                </textContent>
+            </ns2:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>DumpErrorToDB</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>CatchAll</pd:from>
+        <pd:to>WriteErrorToFile</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>WriteErrorToFile</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>GenerateID</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenerateID</pd:from>
+        <pd:to>DumpErrorToDB</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

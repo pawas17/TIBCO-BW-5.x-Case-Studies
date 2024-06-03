@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd2" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd3" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:pfx3="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" xmlns:pfx4="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/SharedResources/Schema.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd3" schemaLocation="/Resources/SharedResources/AuditLogDetails.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd2" schemaLocation="/Resources/SharedResources/ErrorReport.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/SharedResources/Schema.xsd" schemaLocation="/Test/Employee-1.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" schemaLocation="/Resources/SharedResources/EmployeeDetails.xsd"/>
+    <pd:name>Commons/DumpAuditLogToDatabase.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType ref="pfx3:EmployeeDetails"/>
+    <pd:startX>87</pd:startX>
+    <pd:startY>56</pd:startY>
+    <pd:returnBindings>
+        <Result>
+            <xsl:value-of select="&quot;Audit message has been logged successfully on the Audit database&quot;"/>
+        </Result>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="Result" type="xsd:string"/>
+    </pd:endType>
+    <pd:endX>631</pd:endX>
+    <pd:endY>56</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1717230251896</pd:targetNamespace>
+    <pd:activity name="CatchAll">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>215</pd:x>
+        <pd:y>153</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="DumpToAuditDB">
+        <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+        <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+        <pd:x>499</pd:x>
+        <pd:y>56</pd:y>
+        <config>
+            <timeout>10</timeout>
+            <commit>false</commit>
+            <emptyStrAsNil>true</emptyStrAsNil>
+            <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionAuditDB.sharedjdbc</jdbcSharedConfig>
+            <statement>insert into auditlog(auditlogid,inputmsg) values(?,?)</statement>
+            <Prepared_Param_DataType>
+                <parameter>
+                    <parameterName>audit_log_id</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+                <parameter>
+                    <parameterName>input_msg</parameterName>
+                    <dataType>VARCHAR</dataType>
+                </parameter>
+            </Prepared_Param_DataType>
+        </config>
+        <pd:inputBindings>
+            <jdbcUpdateActivityInput>
+                <audit_log_id>
+                    <xsl:value-of select="$GenerateAuditLogID/ID"/>
+                </audit_log_id>
+                <input_msg>
+                    <xsl:value-of select="tib:render-xml($Render-XML/xmlString)"/>
+                </input_msg>
+            </jdbcUpdateActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="GenerateAuditLogID">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>354</pd:x>
+        <pd:y>56</pd:y>
+        <config>
+            <processName>/Commons/GenerateID.process</processName>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="Render XML">
+        <pd:type>com.tibco.plugin.xml.XMLRendererActivity</pd:type>
+        <pd:resourceType>ae.activities.XMLRendererActivity</pd:resourceType>
+        <pd:x>203</pd:x>
+        <pd:y>55</pd:y>
+        <config>
+            <renderAsText>text</renderAsText>
+            <validateInput>false</validateInput>
+            <term ref="pfx3:EmployeeDetails"/>
+        </config>
+        <pd:inputBindings>
+            <pfx3:EmployeeDetails>
+                <xsl:if test="$Start/pfx3:EmployeeDetails/pfx3:emp_id">
+                    <pfx3:emp_id>
+                        <xsl:value-of select="$Start/pfx3:EmployeeDetails/pfx3:emp_id"/>
+                    </pfx3:emp_id>
+                </xsl:if>
+                <xsl:if test="$Start/pfx3:EmployeeDetails/pfx3:emp_name">
+                    <pfx3:emp_name>
+                        <xsl:value-of select="$Start/pfx3:EmployeeDetails/pfx3:emp_name"/>
+                    </pfx3:emp_name>
+                </xsl:if>
+                <xsl:if test="$Start/pfx3:EmployeeDetails/pfx3:salary">
+                    <pfx3:salary>
+                        <xsl:value-of select="$Start/pfx3:EmployeeDetails/pfx3:salary"/>
+                    </pfx3:salary>
+                </xsl:if>
+                <pfx3:Action>
+                    <xsl:value-of select="$Start/pfx3:EmployeeDetails/pfx3:Action"/>
+                </pfx3:Action>
+            </pfx3:EmployeeDetails>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="WriteErrorToFile">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>351</pd:x>
+        <pd:y>154</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+            <append>true</append>
+        </config>
+        <pd:inputBindings>
+            <ns2:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/LogEmployeeSvc"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="concat(&quot;&#xD;&quot;,$_error/ns1:ErrorReport/Data/*,&quot; at: &quot;,current-dateTime())"/>
+                </textContent>
+            </ns2:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>DumpToAuditDB</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>CatchAll</pd:from>
+        <pd:to>WriteErrorToFile</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>WriteErrorToFile</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>GenerateAuditLogID</pd:from>
+        <pd:to>DumpToAuditDB</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Render XML</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Render XML</pd:from>
+        <pd:to>GenerateAuditLogID</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

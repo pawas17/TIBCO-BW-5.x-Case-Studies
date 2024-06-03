@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/pe/DeployedVarsType" xmlns:ns="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:pfx3="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/SharedResources/Schema.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tib="http://www.tibco.com/bw/xslt/custom-functions" xmlns:ns1="http://www.tibco.com/pe/EngineTypes" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <xsd:import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/SharedResources/Schema.xsd" schemaLocation="/Test/Employee-1.xsd"/>
+    <xsd:import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" schemaLocation="/Resources/SharedResources/EmployeeDetails.xsd"/>
+    <pd:name>Services/ManageEmployee.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startType>
+        <xsd:element name="Input" type="xsd:string"/>
+    </pd:startType>
+    <pd:startX>71</pd:startX>
+    <pd:startY>319</pd:startY>
+    <pd:returnBindings>
+        <Result>
+            <xsl:value-of select="&quot;Employees are managed successfully&quot;"/>
+        </Result>
+    </pd:returnBindings>
+    <pd:endName>End</pd:endName>
+    <pd:endType>
+        <xsd:element name="Result" type="xsd:string"/>
+    </pd:endType>
+    <pd:endX>1097</pd:endX>
+    <pd:endY>309</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1717091334529</pd:targetNamespace>
+    <pd:group name="Transaction">
+        <pd:type>com.tibco.pe.core.TransactionGroup</pd:type>
+        <pd:resourceType>ae.process.group</pd:resourceType>
+        <pd:x>286</pd:x>
+        <pd:y>60</pd:y>
+        <pd:width>742</pd:width>
+        <pd:height>512</pd:height>
+        <pd:collapsedWidth>57</pd:collapsedWidth>
+        <pd:collapsedHeight>70</pd:collapsedHeight>
+        <pd:groupVariables/>
+        <pd:joinToggle>inherit</pd:joinToggle>
+        <config>
+            <pd:groupType>transactionGroup</pd:groupType>
+            <pd:serializable>false</pd:serializable>
+            <pd:transactionType>JDBCTransaction</pd:transactionType>
+            <pd:includeCheckpoint>false</pd:includeCheckpoint>
+        </config>
+        <pd:inputBindings/>
+        <pd:expanded>true</pd:expanded>
+        <pd:transition>
+            <pd:from>start</pd:from>
+            <pd:to>Iteration</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:transition>
+            <pd:from>Iteration</pd:from>
+            <pd:to>end</pd:to>
+            <pd:lineType>Default</pd:lineType>
+            <pd:lineColor>-16777216</pd:lineColor>
+            <pd:conditionType>always</pd:conditionType>
+        </pd:transition>
+        <pd:group name="Iteration">
+            <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+            <pd:resourceType>ae.process.group</pd:resourceType>
+            <pd:x>318</pd:x>
+            <pd:y>94</pd:y>
+            <pd:width>661</pd:width>
+            <pd:height>441</pd:height>
+            <pd:collapsedWidth>57</pd:collapsedWidth>
+            <pd:collapsedHeight>70</pd:collapsedHeight>
+            <pd:groupVariables/>
+            <pd:joinToggle>inherit</pd:joinToggle>
+            <config>
+                <pd:groupType>inputLoop</pd:groupType>
+                <pd:serializable>false</pd:serializable>
+                <pd:over>$Parse-Data/Output/Rows/pfx:EmployeeDetails</pd:over>
+                <pd:indexSlot>i</pd:indexSlot>
+                <pd:activityOutputName/>
+                <pd:accumulateOutput>false</pd:accumulateOutput>
+            </config>
+            <pd:inputBindings/>
+            <pd:expanded>true</pd:expanded>
+            <pd:transition>
+                <pd:from>start</pd:from>
+                <pd:to>EmployeeDetails</pd:to>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>always</pd:conditionType>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>AuditLog-2</pd:from>
+                <pd:to>end</pd:to>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>always</pd:conditionType>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>AuditLog-3</pd:from>
+                <pd:to>end</pd:to>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>always</pd:conditionType>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>AuditLog-1</pd:from>
+                <pd:to>end</pd:to>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>always</pd:conditionType>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>PromoteEmployee</pd:from>
+                <pd:to>AuditLog-2</pd:to>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>always</pd:conditionType>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>EmployeeSeparation</pd:from>
+                <pd:to>AuditLog-3</pd:to>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>always</pd:conditionType>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>RecruitEmployee</pd:from>
+                <pd:to>AuditLog-1</pd:to>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>always</pd:conditionType>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>EmployeeDetails</pd:from>
+                <pd:to>CheckEmployee-2</pd:to>
+                <pd:xpathDescription>PromoteEmployee</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>contains($EmployeeDetails/pfx:EmployeeDetails/pfx:Action, "U")</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>CheckEmployee-2</pd:from>
+                <pd:to>PromoteEmployee</pd:to>
+                <pd:xpathDescription>EmpExists</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>string-length($CheckEmployee-2/resultSet/Record[1])&gt;0</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>EmployeeDetails</pd:from>
+                <pd:to>CheckEmployee-3</pd:to>
+                <pd:xpathDescription>EmployeeSeparation</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>contains($EmployeeDetails/pfx:EmployeeDetails/pfx:Action, "D")</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>CheckEmployee-3</pd:from>
+                <pd:to>EmployeeSeparation</pd:to>
+                <pd:xpathDescription>EmpExists</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>string-length($CheckEmployee-3/resultSet/Record[1])&gt;0</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>CheckEmployee-3</pd:from>
+                <pd:to>Generate-Error-3</pd:to>
+                <pd:xpathDescription>EmpNotExist</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>string-length($CheckEmployee-3/resultSet/Record[1])=0</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>CheckEmployee-2</pd:from>
+                <pd:to>Generate-Error-2</pd:to>
+                <pd:xpathDescription>EmpNotExist</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>string-length($CheckEmployee-2/resultSet/Record[1])=0</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>EmployeeDetails</pd:from>
+                <pd:to>CheckEmployee-1</pd:to>
+                <pd:xpathDescription>RecruitEmployee</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>contains($EmployeeDetails/pfx:EmployeeDetails/pfx:Action, "I")</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>CheckEmployee-1</pd:from>
+                <pd:to>RecruitEmployee</pd:to>
+                <pd:xpathDescription>EmpNotExist</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>not(string-length($CheckEmployee-1/resultSet/Record[1])&gt;0)</pd:xpath>
+            </pd:transition>
+            <pd:transition>
+                <pd:from>CheckEmployee-1</pd:from>
+                <pd:to>Generate-Error-1</pd:to>
+                <pd:xpathDescription>EmpExist</pd:xpathDescription>
+                <pd:lineType>Default</pd:lineType>
+                <pd:lineColor>-16777216</pd:lineColor>
+                <pd:conditionType>xpath</pd:conditionType>
+                <pd:xpath>string-length($CheckEmployee-1/resultSet/Record[1])&gt;0</pd:xpath>
+            </pd:transition>
+            <pd:activity name="RecruitEmployee">
+                <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+                <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+                <pd:x>670</pd:x>
+                <pd:y>150</pd:y>
+                <config>
+                    <timeout>10</timeout>
+                    <commit>false</commit>
+                    <emptyStrAsNil>false</emptyStrAsNil>
+                    <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionMSSQLDB.sharedjdbc</jdbcSharedConfig>
+                    <statement>insert into employee values(?,?,?)</statement>
+                    <Prepared_Param_DataType>
+                        <parameter>
+                            <parameterName>emp_id</parameterName>
+                            <dataType>INTEGER</dataType>
+                        </parameter>
+                        <parameter>
+                            <parameterName>emp_name</parameterName>
+                            <dataType>VARCHAR</dataType>
+                        </parameter>
+                        <parameter>
+                            <parameterName>salary</parameterName>
+                            <dataType>INTEGER</dataType>
+                        </parameter>
+                    </Prepared_Param_DataType>
+                </config>
+                <pd:inputBindings>
+                    <jdbcUpdateActivityInput>
+                        <emp_id>
+                            <xsl:choose>
+                                <xsl:when test="exists($CheckEmployee-1/resultSet/Record[1]/empid)">
+                                    <xsl:value-of select="$CheckEmployee-1/resultSet/Record[1]/empid"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </emp_id>
+                        <emp_name>
+                            <xsl:choose>
+                                <xsl:when test="exists($EmployeeDetails/pfx:EmployeeDetails/pfx:emp_name)">
+                                    <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_name"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
+                        </emp_name>
+                        <xsl:choose>
+                            <xsl:when test="string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0">
+                                <salary>
+                                    <xsl:value-of select="0"/>
+                                </salary>
+                            </xsl:when>
+                            <xsl:when test="not(string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0)">
+                                <salary>
+                                    <xsl:choose>
+                                        <xsl:when test="exists($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)">
+                                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:salary"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </salary>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <salary>
+                                    <xsl:choose>
+                                        <xsl:when test="exists($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)">
+                                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:salary"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </salary>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </jdbcUpdateActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="PromoteEmployee">
+                <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+                <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+                <pd:x>677</pd:x>
+                <pd:y>256</pd:y>
+                <config>
+                    <timeout>10</timeout>
+                    <commit>false</commit>
+                    <emptyStrAsNil>false</emptyStrAsNil>
+                    <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionMSSQLDB.sharedjdbc</jdbcSharedConfig>
+                    <statement>Update employee set salary=salary+salary*0.02 where empid=?</statement>
+                    <Prepared_Param_DataType>
+                        <parameter>
+                            <parameterName>emp_id</parameterName>
+                            <dataType>INTEGER</dataType>
+                        </parameter>
+                    </Prepared_Param_DataType>
+                </config>
+                <pd:inputBindings>
+                    <jdbcUpdateActivityInput>
+                        <emp_id>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id"/>
+                        </emp_id>
+                    </jdbcUpdateActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="EmployeeSeparation">
+                <pd:type>com.tibco.plugin.jdbc.JDBCUpdateActivity</pd:type>
+                <pd:resourceType>ae.activities.JDBCUpdateActivity</pd:resourceType>
+                <pd:x>687</pd:x>
+                <pd:y>402</pd:y>
+                <config>
+                    <timeout>10</timeout>
+                    <commit>false</commit>
+                    <emptyStrAsNil>false</emptyStrAsNil>
+                    <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionMSSQLDB.sharedjdbc</jdbcSharedConfig>
+                    <statement>Delete from employee where empid=?</statement>
+                    <Prepared_Param_DataType>
+                        <parameter>
+                            <parameterName>emp_d</parameterName>
+                            <dataType>INTEGER</dataType>
+                        </parameter>
+                    </Prepared_Param_DataType>
+                </config>
+                <pd:inputBindings>
+                    <jdbcUpdateActivityInput>
+                        <emp_d>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id"/>
+                        </emp_d>
+                    </jdbcUpdateActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="EmployeeDetails">
+                <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+                <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+                <pd:x>402</pd:x>
+                <pd:y>247</pd:y>
+                <config>
+                    <element ref="pfx:EmployeeDetails"/>
+                </config>
+                <pd:inputBindings>
+                    <pfx:EmployeeDetails>
+                        <xsl:if test="$Parse-Data/Output/Rows/pfx:EmployeeDetails[$i]/pfx:emp_id">
+                            <pfx:emp_id>
+                                <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails[$i]/pfx:emp_id"/>
+                            </pfx:emp_id>
+                        </xsl:if>
+                        <xsl:if test="$Parse-Data/Output/Rows/pfx:EmployeeDetails[$i]/pfx:emp_name">
+                            <pfx:emp_name>
+                                <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails[$i]/pfx:emp_name"/>
+                            </pfx:emp_name>
+                        </xsl:if>
+                        <xsl:if test="$Parse-Data/Output/Rows/pfx:EmployeeDetails[$i]/pfx:salary">
+                            <pfx:salary>
+                                <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails[$i]/pfx:salary"/>
+                            </pfx:salary>
+                        </xsl:if>
+                        <pfx:Action>
+                            <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails[$i]/pfx:Action"/>
+                        </pfx:Action>
+                    </pfx:EmployeeDetails>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="AuditLog-2">
+                <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+                <pd:resourceType>ae.process.subprocess</pd:resourceType>
+                <pd:x>789</pd:x>
+                <pd:y>255</pd:y>
+                <config>
+                    <processName>/Commons/DumpAuditLogToDatabase.process</processName>
+                </config>
+                <pd:inputBindings>
+                    <pfx:EmployeeDetails>
+                        <xsl:if test="$CheckEmployee-2/resultSet/Record[1]/empid">
+                            <pfx:emp_id>
+                                <xsl:value-of select="$CheckEmployee-2/resultSet/Record[1]/empid"/>
+                            </pfx:emp_id>
+                        </xsl:if>
+                        <pfx:emp_name>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_name"/>
+                        </pfx:emp_name>
+                        <xsl:choose>
+                            <xsl:when test="string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0">
+                                <pfx:salary>
+                                    <xsl:value-of select="0"/>
+                                </pfx:salary>
+                            </xsl:when>
+                            <xsl:when test="not(string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0)">
+                                <pfx:salary>
+                                    <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:salary"/>
+                                </pfx:salary>
+                            </xsl:when>
+                        </xsl:choose>
+                        <pfx:Action>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:Action"/>
+                        </pfx:Action>
+                    </pfx:EmployeeDetails>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="AuditLog-3">
+                <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+                <pd:resourceType>ae.process.subprocess</pd:resourceType>
+                <pd:x>796</pd:x>
+                <pd:y>394</pd:y>
+                <config>
+                    <processName>/Commons/DumpAuditLogToDatabase.process</processName>
+                </config>
+                <pd:inputBindings>
+                    <pfx:EmployeeDetails>
+                        <xsl:if test="$CheckEmployee-3/resultSet/Record[1]/empid">
+                            <pfx:emp_id>
+                                <xsl:value-of select="$CheckEmployee-3/resultSet/Record[1]/empid"/>
+                            </pfx:emp_id>
+                        </xsl:if>
+                        <pfx:emp_name>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_name"/>
+                        </pfx:emp_name>
+                        <xsl:choose>
+                            <xsl:when test="string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0">
+                                <pfx:salary>
+                                    <xsl:value-of select="0"/>
+                                </pfx:salary>
+                            </xsl:when>
+                            <xsl:when test="not(string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0)">
+                                <pfx:salary>
+                                    <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:salary"/>
+                                </pfx:salary>
+                            </xsl:when>
+                        </xsl:choose>
+                        <pfx:Action>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:Action"/>
+                        </pfx:Action>
+                    </pfx:EmployeeDetails>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="AuditLog-1">
+                <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+                <pd:resourceType>ae.process.subprocess</pd:resourceType>
+                <pd:x>792</pd:x>
+                <pd:y>154</pd:y>
+                <config>
+                    <processName>/Commons/DumpAuditLogToDatabase.process</processName>
+                </config>
+                <pd:inputBindings>
+                    <pfx:EmployeeDetails>
+                        <xsl:choose>
+                            <xsl:when test="string-length($CheckEmployee-1/resultSet/Record[1]/empid)=0">
+                                <pfx:emp_id>
+                                    <xsl:value-of select="0"/>
+                                </pfx:emp_id>
+                            </xsl:when>
+                            <xsl:when test="not(string-length($CheckEmployee-1/resultSet/Record[1]/empid)=0)">
+                                <pfx:emp_id>
+                                    <xsl:value-of select="$CheckEmployee-1/resultSet/Record[1]/empid"/>
+                                </pfx:emp_id>
+                            </xsl:when>
+                        </xsl:choose>
+                        <pfx:emp_name>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_name"/>
+                        </pfx:emp_name>
+                        <xsl:choose>
+                            <xsl:when test="string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0">
+                                <pfx:salary>
+                                    <xsl:value-of select="0"/>
+                                </pfx:salary>
+                            </xsl:when>
+                            <xsl:when test="not(string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:salary)=0)">
+                                <pfx:salary>
+                                    <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:salary"/>
+                                </pfx:salary>
+                            </xsl:when>
+                        </xsl:choose>
+                        <pfx:Action>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:Action"/>
+                        </pfx:Action>
+                    </pfx:EmployeeDetails>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="CheckEmployee-2">
+                <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+                <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+                <pd:x>536</pd:x>
+                <pd:y>255</pd:y>
+                <config>
+                    <timeout>10</timeout>
+                    <commit>false</commit>
+                    <maxRows>100</maxRows>
+                    <emptyStrAsNil>false</emptyStrAsNil>
+                    <statement>select  *from employee where empid=?</statement>
+                    <Prepared_Param_DataType>
+                        <parameter>
+                            <parameterName>empid</parameterName>
+                            <dataType>INTEGER</dataType>
+                        </parameter>
+                    </Prepared_Param_DataType>
+                    <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionMSSQLDB.sharedjdbc</jdbcSharedConfig>
+                    <wizardData/>
+                    <oraObjects/>
+                    <oraTables/>
+                    <QueryOutputCachedSchemaColumns>empid</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>4</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>INT</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+                    <QueryOutputCachedSchemaColumns>name</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>VARCHAR</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+                    <QueryOutputCachedSchemaColumns>salary</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>4</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>INT</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+                </config>
+                <pd:inputBindings>
+                    <jdbcQueryActivityInput>
+                        <empid>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id"/>
+                        </empid>
+                    </jdbcQueryActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="CheckEmployee-3">
+                <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+                <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+                <pd:x>534</pd:x>
+                <pd:y>394</pd:y>
+                <config>
+                    <timeout>10</timeout>
+                    <commit>false</commit>
+                    <maxRows>100</maxRows>
+                    <emptyStrAsNil>true</emptyStrAsNil>
+                    <statement>select  *from employee where empid=?</statement>
+                    <Prepared_Param_DataType>
+                        <parameter>
+                            <parameterName>empid</parameterName>
+                            <dataType>INTEGER</dataType>
+                        </parameter>
+                    </Prepared_Param_DataType>
+                    <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionMSSQLDB.sharedjdbc</jdbcSharedConfig>
+                    <wizardData/>
+                    <oraObjects/>
+                    <oraTables/>
+                    <QueryOutputCachedSchemaColumns>empid</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>4</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>INT</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+                    <QueryOutputCachedSchemaColumns>name</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>VARCHAR</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+                    <QueryOutputCachedSchemaColumns>salary</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>4</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>INT</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+                </config>
+                <pd:inputBindings>
+                    <jdbcQueryActivityInput>
+                        <empid>
+                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id"/>
+                        </empid>
+                    </jdbcQueryActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="Generate-Error-3">
+                <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+                <pd:resourceType>ae.activities.throw</pd:resourceType>
+                <pd:x>698</pd:x>
+                <pd:y>472</pd:y>
+                <config>
+                    <faultName/>
+                </config>
+                <pd:inputBindings>
+                    <ns:ActivityInput>
+                        <message>
+                            <xsl:value-of select="concat(&quot;Employee with empid: &quot;,$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id,&quot; doesn't exist.&quot;)"/>
+                        </message>
+                    </ns:ActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="Generate-Error-2">
+                <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+                <pd:resourceType>ae.activities.throw</pd:resourceType>
+                <pd:x>680</pd:x>
+                <pd:y>339</pd:y>
+                <config>
+                    <faultName/>
+                </config>
+                <pd:inputBindings>
+                    <ns:ActivityInput>
+                        <message>
+                            <xsl:value-of select="concat(&quot;Employee with empid: &quot;,$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id,&quot; doesn't exist.&quot;)"/>
+                        </message>
+                    </ns:ActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="Generate-Error-1">
+                <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+                <pd:resourceType>ae.activities.throw</pd:resourceType>
+                <pd:x>648</pd:x>
+                <pd:y>205</pd:y>
+                <config>
+                    <faultName/>
+                </config>
+                <pd:inputBindings>
+                    <ns:ActivityInput>
+                        <message>
+                            <xsl:value-of select="concat(&quot;Employee with empid: &quot;,$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id,&quot; exists.&quot;)"/>
+                        </message>
+                    </ns:ActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+            <pd:activity name="CheckEmployee-1">
+                <pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+                <pd:resourceType>ae.activities.JDBCQueryActivity</pd:resourceType>
+                <pd:x>527</pd:x>
+                <pd:y>153</pd:y>
+                <config>
+                    <timeout>10</timeout>
+                    <commit>false</commit>
+                    <maxRows>100</maxRows>
+                    <emptyStrAsNil>false</emptyStrAsNil>
+                    <jdbcSharedConfig>/Resources/SharedConnections/JDBCConnectionMSSQLDB.sharedjdbc</jdbcSharedConfig>
+                    <statement>select  *from employee where empid=?</statement>
+                    <optionalOrNillable>false</optionalOrNillable>
+                    <Prepared_Param_DataType>
+                        <parameter>
+                            <parameterName>empid</parameterName>
+                            <dataType>INTEGER</dataType>
+                        </parameter>
+                    </Prepared_Param_DataType>
+                    <oraObjects/>
+                    <oraTables/>
+                    <QueryOutputCachedSchemaColumns>empid</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>4</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>INT</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>RequiredElement</QueryOutputCachedSchemaStatus>
+                    <QueryOutputCachedSchemaColumns>name</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>VARCHAR</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>NillableElement</QueryOutputCachedSchemaStatus>
+                    <QueryOutputCachedSchemaColumns>salary</QueryOutputCachedSchemaColumns>
+                    <QueryOutputCachedSchemaDataTypes>4</QueryOutputCachedSchemaDataTypes>
+                    <QueryOutputCachedSchemaDataTypesName>INT</QueryOutputCachedSchemaDataTypesName>
+                    <QueryOutputCachedSchemaStatus>NillableElement</QueryOutputCachedSchemaStatus>
+                </config>
+                <pd:inputBindings>
+                    <jdbcQueryActivityInput>
+                        <xsl:choose>
+                            <xsl:when test="string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id)=0">
+                                <empid>
+                                    <xsl:value-of select="0"/>
+                                </empid>
+                            </xsl:when>
+                            <xsl:when test="not(string-length($EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id)=0)">
+                                <empid>
+                                    <xsl:choose>
+                                        <xsl:when test="exists($EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id)">
+                                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </empid>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <empid>
+                                    <xsl:choose>
+                                        <xsl:when test="exists($EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id)">
+                                            <xsl:value-of select="$EmployeeDetails/pfx:EmployeeDetails/pfx:emp_id"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:attribute name="xsi:nil">true</xsl:attribute>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </empid>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </jdbcQueryActivityInput>
+                </pd:inputBindings>
+            </pd:activity>
+        </pd:group>
+    </pd:group>
+    <pd:activity name="Generate Error">
+        <pd:type>com.tibco.pe.core.GenerateErrorActivity</pd:type>
+        <pd:resourceType>ae.activities.throw</pd:resourceType>
+        <pd:x>190</pd:x>
+        <pd:y>435</pd:y>
+        <config>
+            <faultName/>
+        </config>
+        <pd:inputBindings>
+            <ns:ActivityInput>
+                <xsl:if test="$_error/ns1:ErrorReport/Data/*">
+                    <message>
+                        <xsl:value-of select="$_error/ns1:ErrorReport/Data/*"/>
+                    </message>
+                </xsl:if>
+            </ns:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Parse Data">
+        <pd:type>com.tibco.plugin.parse.ParseActivity</pd:type>
+        <pd:resourceType>ae.activities.ParseActivity</pd:resourceType>
+        <pd:x>194</pd:x>
+        <pd:y>319</pd:y>
+        <config>
+            <InputType>String</InputType>
+            <Encoding>ASCII</Encoding>
+            <ParseSharedConfig>/Resources/SharedResources/EmployeeDetails.sharedparse</ParseSharedConfig>
+            <StrictValidation>true</StrictValidation>
+            <SkipBlankLines>true</SkipBlankLines>
+        </config>
+        <pd:inputBindings>
+            <Input>
+                <text>
+                    <xsl:value-of select="$Start/Input"/>
+                </text>
+                <noOfRecords>
+                    <xsl:value-of select="-1"/>
+                </noOfRecords>
+            </Input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Transaction</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Parse Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse Data</pd:from>
+        <pd:to>Transaction</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse Data</pd:from>
+        <pd:to>Generate Error</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>error</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

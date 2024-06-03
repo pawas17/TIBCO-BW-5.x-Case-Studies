@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/SharedResources/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file/v2" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/file">
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" schemaLocation="/Resources/SharedResources/EmployeeDetails.xsd"/>
+    <xs:import xmlns:xs="http://www.w3.org/2001/XMLSchema" namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/SharedResources/Schema.xsd" schemaLocation="/Test/Employee-1.xsd"/>
+    <pd:name>Test/TestParseData.process</pd:name>
+    <pd:startName>Start</pd:startName>
+    <pd:startX>66</pd:startX>
+    <pd:startY>59</pd:startY>
+    <pd:returnBindings/>
+    <pd:endName>End</pd:endName>
+    <pd:endX>727</pd:endX>
+    <pd:endY>46</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables/>
+    <pd:targetNamespace>http://xmlns.example.com/1717354065811</pd:targetNamespace>
+    <pd:activity name="Parse Data">
+        <pd:type>com.tibco.plugin.parse.ParseActivity</pd:type>
+        <pd:resourceType>ae.activities.ParseActivity</pd:resourceType>
+        <pd:x>366</pd:x>
+        <pd:y>60</pd:y>
+        <config>
+            <InputType>String</InputType>
+            <Encoding>ASCII</Encoding>
+            <ParseSharedConfig>/Test/Data Format.sharedparse</ParseSharedConfig>
+            <SkipBlankLines>true</SkipBlankLines>
+        </config>
+        <pd:inputBindings>
+            <Input>
+                <text>
+                    <xsl:value-of select="$Read-File/ns1:ReadActivityOutputTextClass/fileContent/textContent"/>
+                </text>
+                <noOfRecords>
+                    <xsl:value-of select="-1"/>
+                </noOfRecords>
+            </Input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Read File">
+        <pd:type>com.tibco.plugin.file.FileReadActivity</pd:type>
+        <pd:resourceType>ae.activities.FileReadActivity</pd:resourceType>
+        <pd:x>236</pd:x>
+        <pd:y>62</pd:y>
+        <config>
+            <encoding>text</encoding>
+        </config>
+        <pd:inputBindings>
+            <ns2:ReadActivityInputClass>
+                <fileName>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/InputFile"/>
+                </fileName>
+            </ns2:ReadActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Map Data">
+        <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+        <pd:resourceType>ae.activities.MapperActivity</pd:resourceType>
+        <pd:x>555</pd:x>
+        <pd:y>64</pd:y>
+        <config>
+            <element ref="pfx:EmployeeDetails1"/>
+        </config>
+        <pd:inputBindings>
+            <pfx:EmployeeDetails1>
+                <xsl:if test="$Parse-Data/Output/Rows/pfx:EmployeeDetails1[1]/pfx:emp_id">
+                    <pfx:emp_id>
+                        <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails1[1]/pfx:emp_id"/>
+                    </pfx:emp_id>
+                </xsl:if>
+                <xsl:if test="$Parse-Data/Output/Rows/pfx:EmployeeDetails1[1]/pfx:emp_name">
+                    <pfx:emp_name>
+                        <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails1[1]/pfx:emp_name"/>
+                    </pfx:emp_name>
+                </xsl:if>
+                <xsl:if test="$Parse-Data/Output/Rows/pfx:EmployeeDetails1[1]/pfx:salary">
+                    <pfx:salary>
+                        <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails1[1]/pfx:salary"/>
+                    </pfx:salary>
+                </xsl:if>
+                <pfx:action>
+                    <xsl:value-of select="$Parse-Data/Output/Rows/pfx:EmployeeDetails1[1]/pfx:action"/>
+                </pfx:action>
+            </pfx:EmployeeDetails1>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>Start</pd:from>
+        <pd:to>Read File</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Read File</pd:from>
+        <pd:to>Parse Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Parse Data</pd:from>
+        <pd:to>Map Data</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Map Data</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

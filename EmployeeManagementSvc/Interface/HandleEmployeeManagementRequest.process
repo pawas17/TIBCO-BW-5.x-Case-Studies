@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pd:ProcessDefinition xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:pfx="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" xmlns:pd="http://xmlns.tibco.com/bw/process/2003" xmlns:pfx2="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:ns="http://www.tibco.com/pe/DeployedVarsType" xmlns:pfx3="http://www.tibco.com/pe/GenerateErrorActivity/InputSchema" xmlns:pfx4="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd2" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/file/v2" xmlns:ns1="http://www.tibco.com/namespaces/tnt/plugins/file" xmlns:ns3="http://www.tibco.com/pe/EngineTypes">
+    <pd:name>Interface/HandleEmployeeManagementRequest.process</pd:name>
+    <pd:startName>Timer</pd:startName>
+    <pd:startX>0</pd:startX>
+    <pd:startY>0</pd:startY>
+    <pd:returnBindings/>
+    <pd:starter name="Timer">
+        <pd:type>com.tibco.plugin.timer.TimerEventSource</pd:type>
+        <pd:resourceType>ae.activities.timer</pd:resourceType>
+        <pd:x>65</pd:x>
+        <pd:y>42</pd:y>
+        <config>
+            <StartTime>1717403708000</StartTime>
+            <Frequency>false</Frequency>
+            <TimeInterval>5</TimeInterval>
+            <FrequencyIndex>Minute</FrequencyIndex>
+        </config>
+        <pd:inputBindings/>
+    </pd:starter>
+    <pd:endName>End</pd:endName>
+    <pd:endX>643</pd:endX>
+    <pd:endY>42</pd:endY>
+    <pd:errorSchemas/>
+    <pd:processVariables>
+        <Error>
+            <xsd:element name="Error" type="xsd:string"/>
+        </Error>
+        <SystemError>
+            <xsd:element name="SystemError" type="xsd:string"/>
+        </SystemError>
+    </pd:processVariables>
+    <pd:targetNamespace>http://xmlns.example.com/1717089384583</pd:targetNamespace>
+    <pd:activity name="CatchAll">
+        <pd:type>com.tibco.pe.core.CatchActivity</pd:type>
+        <pd:resourceType>ae.activities.catch</pd:resourceType>
+        <pd:x>76</pd:x>
+        <pd:y>222</pd:y>
+        <pd:handler>true</pd:handler>
+        <config>
+            <catchAll>true</catchAll>
+        </config>
+        <pd:inputBindings/>
+    </pd:activity>
+    <pd:activity name="DumpErrorLogToDatabase">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>448</pd:x>
+        <pd:y>220</pd:y>
+        <config>
+            <processName>/Commons/DumpErrorLogToDatabase.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:ErrorReport>
+                <pfx4:ErrorType>
+                    <xsl:value-of select="$Error/Error"/>
+                </pfx4:ErrorType>
+                <xsl:if test="$_error/ns3:ErrorReport/StackTrace">
+                    <pfx4:StackTrace>
+                        <xsl:value-of select="$_error/ns3:ErrorReport/StackTrace"/>
+                    </pfx4:StackTrace>
+                </xsl:if>
+                <xsl:if test="$_error/ns3:ErrorReport/Msg">
+                    <pfx4:Msg>
+                        <xsl:value-of select="$_error/ns3:ErrorReport/Msg"/>
+                    </pfx4:Msg>
+                </xsl:if>
+                <xsl:if test="$_error/ns3:ErrorReport/FullClass">
+                    <pfx4:FullClass>
+                        <xsl:value-of select="$_error/ns3:ErrorReport/FullClass"/>
+                    </pfx4:FullClass>
+                </xsl:if>
+                <xsl:if test="$_error/ns3:ErrorReport/Class">
+                    <pfx4:Class>
+                        <xsl:value-of select="$_error/ns3:ErrorReport/Class"/>
+                    </pfx4:Class>
+                </xsl:if>
+                <xsl:if test="$_error/ns3:ErrorReport/ProcessStack">
+                    <pfx4:ProcessStack>
+                        <xsl:value-of select="$_error/ns3:ErrorReport/ProcessStack"/>
+                    </pfx4:ProcessStack>
+                </xsl:if>
+                <xsl:if test="$_error/ns3:ErrorReport/MsgCode">
+                    <pfx4:MsgCode>
+                        <xsl:value-of select="$_error/ns3:ErrorReport/MsgCode"/>
+                    </pfx4:MsgCode>
+                </xsl:if>
+            </pfx4:ErrorReport>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="DumpErrorLogToDatabase-1">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>449</pd:x>
+        <pd:y>143</pd:y>
+        <config>
+            <processName>/Commons/DumpErrorLogToDatabase.process</processName>
+        </config>
+        <pd:inputBindings>
+            <pfx4:ErrorReport>
+                <pfx4:ErrorType>
+                    <xsl:value-of select="$SystemError/SystemError"/>
+                </pfx4:ErrorType>
+                <pfx4:Msg>
+                    <xsl:value-of select="concat(&quot;&#xD;&quot;, &quot;Empty file found: &quot;, $Read-File/ns1:ReadActivityOutputTextClass/fileInfo/fileName, &quot; on: &quot;,current-dateTime(),&quot;&#xD;&quot;,&quot;Please try again in some time.&quot;)"/>
+                </pfx4:Msg>
+            </pfx4:ErrorReport>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogError">
+        <pd:type>com.tibco.pe.core.WriteToLogActivity</pd:type>
+        <pd:resourceType>ae.activities.log</pd:resourceType>
+        <pd:x>569</pd:x>
+        <pd:y>221</pd:y>
+        <config>
+            <role>User</role>
+        </config>
+        <pd:inputBindings>
+            <pfx2:ActivityInput>
+                <message>
+                    <xsl:value-of select="$CatchAll/exceptiondata/*"/>
+                </message>
+            </pfx2:ActivityInput>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogErrorToFile">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>190</pd:x>
+        <pd:y>142</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+            <append>true</append>
+        </config>
+        <pd:inputBindings>
+            <ns1:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/LogEmployeeSvc"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="concat(&quot;Empty file:  &quot;,$Read-File/ns1:ReadActivityOutputTextClass/fileInfo/fullName, &quot; at: &quot;,$Read-File/ns1:ReadActivityOutputTextClass/fileInfo/lastModified, &quot; identified on :  &quot;, current-dateTime())"/>
+                </textContent>
+            </ns1:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="LogErrorToFile-1">
+        <pd:type>com.tibco.plugin.file.FileWriteActivity</pd:type>
+        <pd:resourceType>ae.activities.FileWriteActivity</pd:resourceType>
+        <pd:x>187</pd:x>
+        <pd:y>221</pd:y>
+        <config>
+            <encoding>text</encoding>
+            <compressFile>None</compressFile>
+            <append>true</append>
+        </config>
+        <pd:inputBindings>
+            <ns1:WriteActivityInputTextClass>
+                <fileName>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/LogEmployeeSvc"/>
+                </fileName>
+                <textContent>
+                    <xsl:value-of select="concat(&quot;Error occured:  &quot;,$CatchAll/exceptiondata/*)"/>
+                </textContent>
+            </ns1:WriteActivityInputTextClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="ManageEmployee">
+        <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
+        <pd:resourceType>ae.process.subprocess</pd:resourceType>
+        <pd:x>381</pd:x>
+        <pd:y>42</pd:y>
+        <config>
+            <processName>/Services/ManageEmployee.process</processName>
+        </config>
+        <pd:inputBindings>
+            <Input>
+                <xsl:value-of select="$Read-File/ns1:ReadActivityOutputTextClass/fileContent/textContent"/>
+            </Input>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="Read File">
+        <pd:type>com.tibco.plugin.file.FileReadActivity</pd:type>
+        <pd:resourceType>ae.activities.FileReadActivity</pd:resourceType>
+        <pd:x>187</pd:x>
+        <pd:y>42</pd:y>
+        <config>
+            <encoding>text</encoding>
+        </config>
+        <pd:inputBindings>
+            <ns2:ReadActivityInputClass>
+                <fileName>
+                    <xsl:value-of select="$_globalVariables/ns:GlobalVariables/InputFile"/>
+                </fileName>
+            </ns2:ReadActivityInputClass>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SevereError">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>305</pd:x>
+        <pd:y>221</pd:y>
+        <config>
+            <variableName>Error</variableName>
+        </config>
+        <pd:inputBindings>
+            <Error>
+                <xsl:value-of select="&quot;SevereError&quot;"/>
+            </Error>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:activity name="SystemError">
+        <pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+        <pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+        <pd:x>306</pd:x>
+        <pd:y>143</pd:y>
+        <config>
+            <variableName>SystemError</variableName>
+        </config>
+        <pd:inputBindings>
+            <SystemError>
+                <xsl:value-of select="&quot;SystemError&quot;"/>
+            </SystemError>
+        </pd:inputBindings>
+    </pd:activity>
+    <pd:transition>
+        <pd:from>ManageEmployee</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Read File</pd:from>
+        <pd:to>ManageEmployee</pd:to>
+        <pd:xpathDescription>NonEmptyFile</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>string-length($Read-File/ns1:ReadActivityOutputTextClass/fileContent/textContent)&gt;0</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Read File</pd:from>
+        <pd:to>LogErrorToFile</pd:to>
+        <pd:xpathDescription>EmptyFile</pd:xpathDescription>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>xpath</pd:conditionType>
+        <pd:xpath>string-length($Read-File/ns1:ReadActivityOutputTextClass/fileContent/textContent)=0</pd:xpath>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogError</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>CatchAll</pd:from>
+        <pd:to>LogErrorToFile-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>DumpErrorLogToDatabase</pd:from>
+        <pd:to>LogError</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogErrorToFile-1</pd:from>
+        <pd:to>SevereError</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SevereError</pd:from>
+        <pd:to>DumpErrorLogToDatabase</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>LogErrorToFile</pd:from>
+        <pd:to>SystemError</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>SystemError</pd:from>
+        <pd:to>DumpErrorLogToDatabase-1</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>DumpErrorLogToDatabase-1</pd:from>
+        <pd:to>End</pd:to>
+        <pd:lineType>One Bend</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+    <pd:transition>
+        <pd:from>Timer</pd:from>
+        <pd:to>Read File</pd:to>
+        <pd:lineType>Default</pd:lineType>
+        <pd:lineColor>-16777216</pd:lineColor>
+        <pd:conditionType>always</pd:conditionType>
+    </pd:transition>
+</pd:ProcessDefinition>

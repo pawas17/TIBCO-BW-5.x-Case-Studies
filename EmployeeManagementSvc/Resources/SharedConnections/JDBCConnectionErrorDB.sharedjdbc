@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BWSharedResource>
+    <name>JDBCConnectionErrorDB</name>
+    <resourceType>ae.shared.JDBCSharedResource</resourceType>
+    <config>
+        <driver>com.mysql.jdbc.Driver</driver>
+        <maxConnections>10</maxConnections>
+        <loginTimeout>0</loginTimeout>
+        <connectionType>JDBC</connectionType>
+        <UseSharedJndiConfig>false</UseSharedJndiConfig>
+        <location>%%SharedConnections/ErrorDB/DatabaseURL%%</location>
+        <user>%%SharedConnections/ErrorDB/UserName%%</user>
+        <password>%%SharedConnections/ErrorDB/Password%%</password>
+    </config>
+</BWSharedResource>

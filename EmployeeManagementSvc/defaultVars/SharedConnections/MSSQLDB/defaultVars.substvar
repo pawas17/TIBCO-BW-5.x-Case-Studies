@@ -1,0 +1,37 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<repository xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance" xmlns = "http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>DatabaseURL</name>
+			<value>com.mysql.jdbc.Driver</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1717349472871</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>JDCBDriver</name>
+			<value>jdbc:mysql://localhost:3306/SamJBW5</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1717349490528</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Password</name>
+			<value>#!YR77FTovgyZafdBpMxU86g==</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>Password</type>
+			<modTime>1717349539543</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>UserName</name>
+			<value>root</value>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<type>String</type>
+			<modTime>1717349456875</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>

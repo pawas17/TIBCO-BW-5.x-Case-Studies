@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BWSharedResource xmlns:pfx="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd">
+    <import namespace="http://www.tibco.com/schemas/EmployeeManagementSvc/Resources/Schema.xsd" schemaLocation="/Resources/SharedResources/EmployeeDetails.xsd"/>
+    <name>EmployeeDetails</name>
+    <resourceType>ae.shared.ParseSharedResource</resourceType>
+    <config xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <FormatType>Delimiter separated</FormatType>
+        <ColumnSeparator>,</ColumnSeparator>
+        <ColSeparatorRule>Treat all characters as entered as a single column separator string</ColSeparatorRule>
+        <LineSeparator>
+</LineSeparator>
+        <FillCharacter>Space</FillCharacter>
+        <LineLength>1</LineLength>
+        <DataFormat ref="pfx:EmployeeDetails"/>
+    </config>
+</BWSharedResource>
